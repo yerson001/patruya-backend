@@ -21,6 +21,12 @@ export class AuthService {
     async register(userData: RegisterAuthDto) {
 
         const { email, phone } = userData;
+
+        /************************************************************* 
+        * validar datos iportantes que no puede repetirce cuando 
+        * se registran los usuarios
+        ************************************************************* */
+        
         const emailExist = await this.userRepository.findOneBy({ email: email });
         if (emailExist) {
             throw new HttpException('El email ya esta registrado', HttpStatus.CONFLICT);
@@ -30,11 +36,29 @@ export class AuthService {
         if (phoneExist) {
             throw new HttpException('El teléfono ya esta registrado', HttpStatus.CONFLICT);
         }
+
+        /*
+        const dniExist = await this.userRepository.findOneBy({dni: dni});
+        if(dniExist){
+            throw new HttpException('El dni ya fue registrado',HttpStatus.CONFLICT);
+        }
+        */
+
+
         const newUser = this.userRepository.create(userData);
 
-        const rolesids = Array.isArray(userData.rolesIds) ? userData.rolesIds : ['WORKER'];
+        /************************************************************* 
+        * Al no proporcionar un rol especifico se por defecto como  
+        * ciudadano  {ADMIN,OFFICER,CITIZER}
+        ************************************************************* */
+        const rolesids = Array.isArray(userData.rolesIds) ? userData.rolesIds : ['CITIZEN'];
 
         //const rolesids = userData.rolesIds;
+
+        /************************************************************* 
+        * Buscar los roles creadas en la base de datos  
+        * un usuairo puede tener mas de un rol
+        ************************************************************* */
 
         const roles = rolesids.length > 0
             ? await this.rolRepository.findBy({ id: In(rolesids) })

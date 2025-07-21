@@ -24,6 +24,8 @@ export class User {
     @Column({ unique: true })
     phone: string;
 
+
+
     @Column({ nullable: true })
     image: string;
 
@@ -38,6 +40,9 @@ export class User {
 
     @CreateDateColumn({ type: 'timestamp' })
     created_at: Date;
+
+
+
 
     @BeforeInsert()
     async hashPassword() {
