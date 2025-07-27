@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import * as os from 'os';
 
 function getServerIp(): string {
@@ -17,14 +17,15 @@ function getServerIp(): string {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
+
   app.useGlobalPipes(new ValidationPipe());
 
-  const PORT = process.env.PORT || 3003;
+  const PORT = parseInt(process.env.PORT, 10) || 3003;
   await app.listen(PORT, '0.0.0.0');
 
   const ip = getServerIp();
-  console.log(`🚀 App corriendo en http://${ip}:${PORT}`);
+  logger.log(`🚀 App corriendo en http://localhost:${PORT}`);
+  logger.log(`🚀 En tu red: http://${ip}:${PORT}`);
 }
 bootstrap();
-
-

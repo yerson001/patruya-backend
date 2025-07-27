@@ -68,24 +68,24 @@ hostname -I
 ```json
 {
     "id":"ADMIN",
-    "name":"administrador",
-    "image":"https://firebasestorage.googleapis.com/v0/b/rpiimage-b6062.appspot.com/o/worker.png?alt=media&token=146c5481-e90e-4640-ad33-79095411b937",
-    "route":"/roles/admin"
+    "name":"ADMINISTRADOR",
+    "image":"https://firebasestorage.googleapis.com/v0/b/rpiimage-b6062.appspot.com/o/admin.png?alt=media&token=25ec32c0-a288-4455-bfea-a159c9054c57",
+    "route":"admin/home"
 }
 
 
 {
     "id":"OFFICER",
-    "name":"oficial",
-    "image":"https://firebasestorage.googleapis.com/v0/b/rpiimage-b6062.appspot.com/o/worker.png?alt=media&token=146c5481-e90e-4640-ad33-79095411b937",
-    "route":"/roles/officer"
+    "name":"OFICIAL DE POLICIA",
+    "image":"https://firebasestorage.googleapis.com/v0/b/rpiimage-b6062.appspot.com/o/officer.png?alt=media&token=e98c58a6-0d4a-4093-b59b-df51c6d2722c",
+    "route":"officer/home"
 }
 
 
 {
     "id":"CITIZEN",
-    "name":"ciudadano",
-    "image":"https://firebasestorage.googleapis.com/v0/b/rpiimage-b6062.appspot.com/o/worker.png?alt=media&token=146c5481-e90e-4640-ad33-79095411b937",
-    "route":"/roles/citizen"
+    "name":"CIUDADANO",
+    "image":"https://firebasestorage.googleapis.com/v0/b/rpiimage-b6062.appspot.com/o/citizen.png?alt=media&token=5dd9c858-e4c5-454d-85f9-bc791c093be6",
+    "route":"citizen/home"
 }
 ```

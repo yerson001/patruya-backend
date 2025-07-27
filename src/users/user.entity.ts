@@ -18,8 +18,8 @@ export class User {
     @Column()
     lastname: string;
 
-    @Column({ unique: true })
-    email: string;
+    @Column({ unique: true, length: 8 })
+    dni: string;
 
     @Column({ unique: true })
     phone: string;

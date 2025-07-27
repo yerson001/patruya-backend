@@ -20,29 +20,22 @@ export class AuthService {
 
     async register(userData: RegisterAuthDto) {
 
-        const { email, phone } = userData;
+        const { dni, phone } = userData;
 
         /************************************************************* 
         * validar datos iportantes que no puede repetirce cuando 
         * se registran los usuarios
         ************************************************************* */
         
-        const emailExist = await this.userRepository.findOneBy({ email: email });
-        if (emailExist) {
-            throw new HttpException('El email ya esta registrado', HttpStatus.CONFLICT);
+        const dniExist = await this.userRepository.findOneBy({ dni: dni });
+        if (dniExist) {
+            throw new HttpException('El DNI ya esta registrado', HttpStatus.CONFLICT);
         }
 
         const phoneExist = await this.userRepository.findOneBy({ phone: phone });
         if (phoneExist) {
             throw new HttpException('El teléfono ya esta registrado', HttpStatus.CONFLICT);
         }
-
-        /*
-        const dniExist = await this.userRepository.findOneBy({dni: dni});
-        if(dniExist){
-            throw new HttpException('El dni ya fue registrado',HttpStatus.CONFLICT);
-        }
-        */
 
 
         const newUser = this.userRepository.create(userData);
@@ -85,14 +78,14 @@ export class AuthService {
     }
 
     async login(loginData: LoginAuthDto) {
-        const { email, password } = loginData;
+        const { dni, password } = loginData;
         const userFound = await this.userRepository.findOne({
-            where: { email: email },
+            where: { dni: dni },
             relations: ['roles']
         });
 
         if (!userFound) {
-            throw new HttpException('El email no esta registrado', HttpStatus.NOT_FOUND);
+            throw new HttpException('El DNI no esta registrado', HttpStatus.NOT_FOUND);
         }
 
         const isPasswordValid = await compare(password, userFound.password);

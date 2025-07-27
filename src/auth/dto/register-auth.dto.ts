@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsNotEmpty, MinLength } from "class-validator";
+import { IsString, IsNotEmpty, MinLength, Length } from "class-validator";
 
 export class RegisterAuthDto {
     
@@ -10,10 +10,10 @@ export class RegisterAuthDto {
     @IsString()
     lastname: string;
 
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'El DNI es requerido' })
     @IsString()
-    @IsEmail({}, { message: 'El email no es valido' })
-    email: string;
+    @Length(8, 8, { message: 'El DNI debe tener 8 dígitos' })
+    dni: string;
 
     @IsNotEmpty()
     @IsString()
