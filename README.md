@@ -89,3 +89,34 @@ hostname -I
     "route":"citizen/home"
 }
 ```
+
+```bash
+ssh root@104.225.141.191
+
+npm install
+npm run build
+
+nano ecosystem.config.js
+module.exports = {
+  apps: [
+    {
+      name: "patruya-backend",
+      script: "dist/main.js",
+      instances: 1,
+      exec_mode: "fork",
+      watch: false,
+      env: {
+        NODE_ENV: "production"
+      }
+    }
+  ]
+};
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup
+sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u root --hp /root
+pm2 status
+
+pm2 logs patruya-backend
+
+```
