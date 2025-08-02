@@ -120,3 +120,94 @@ pm2 status
 pm2 logs patruya-backend
 
 ```
+
+
+CREATE TABLE cities (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  position GEOGRAPHY(POINT, 4326)
+);
+
+-- Índice espacial (como SPATIAL INDEX en MySQL)
+CREATE INDEX idx_cities_position
+ON cities
+USING GIST (position);
+
+
+
+INSERT INTO cities (name, position)
+VALUES
+  ('Plaza Javier Heraud', ST_SetSRID(ST_MakePoint(-71.524512, -16.378519), 4326)),
+  ('Parque José', ST_SetSRID(ST_MakePoint(-71.523248, -16.379134), 4326)),
+  ('Complejo Roosevelt', ST_SetSRID(ST_MakePoint(-71.523524, -16.382442), 4326)),
+  ('Parque Eucaliptos', ST_SetSRID(ST_MakePoint(-71.516669, -16.364460), 4326)),
+  ('Comisaría', ST_SetSRID(ST_MakePoint(-71.517417, -16.383397), 4326));
+
+SELECT id, name, ST_AsText(position) AS position
+FROM cities;
+
+
+WITH center AS (
+  SELECT ST_Centroid(ST_Collect(position::geometry)) AS center_geom
+  FROM cities
+)
+SELECT 
+  c.id,
+  c.name,
+  ST_AsText(c.position::geometry) AS position,
+  ST_Distance(c.position, center.center_geom::geography) AS distance_to_center
+FROM 
+  cities c,
+  center
+ORDER BY 
+  distance_to_center
+LIMIT 1;
+
+DISTANCE COMISARIA
+
+SELECT
+  c1.name AS desde,
+  c2.name AS hacia,
+  ST_Distance(
+    c1.position::geography,
+    c2.position::geography
+  ) AS distancia_metros
+FROM cities c1
+JOIN cities c2 ON c1.name = 'COMISARIA' AND c2.name != 'COMISARIA';
+
+
+SELECT 
+  c2.name,
+  ST_Distance(c1.position::geography, c2.position::geography) AS distance_meters
+FROM 
+  cities c1,
+  cities c2
+WHERE 
+  c1.name = 'COMISARIA'
+  AND c2.name != 'COMISARIA'
+  AND ST_Distance(c1.position::geography, c2.position::geography) <= 700
+ORDER BY 
+  distance_meters;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

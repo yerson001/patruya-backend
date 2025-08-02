@@ -1,6 +1,8 @@
 import { hash } from "bcrypt";
+import { ClientRequests } from "src/client_requests/cliente_requests.entity";
+import { OfficerPosition } from "src/officer_position/officer_position.entity";
 import { Rol } from "src/roles/rol.entity";
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { JoinAttribute } from "typeorm/query-builder/JoinAttribute";
 
 /**
@@ -48,6 +50,13 @@ export class User {
     async hashPassword() {
         this.password = await hash(this.password, Number(process.env.HASH_SALT));
     }
+
+    @OneToMany(() => OfficerPosition,officerPosition=>officerPosition.id_officer)
+    OfficerPosition: OfficerPosition;
+
+
+    @OneToMany(() => ClientRequests,ClientRequests=>ClientRequests.id_client)
+    ClientRequests: ClientRequests;
 
     @JoinTable({
         name: 'user_has_roles',
