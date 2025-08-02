@@ -1,6 +1,7 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -14,16 +15,20 @@ import { OfficerTripResponseModule } from './officer_trip_response/officer_trip_
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // Hace que ConfigModule esté disponible en todos los módulos
+      envFilePath: '.env', // Carga las variables desde el archivo .env
+    }),
+
     TypeOrmModule.forRoot({
-      type:'postgres',
-      host: 'localhost',
-      port: 5433,
-      username:'root',
-      password: 'char5524',
-      database: 'my_db',
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       autoLoadEntities: true,
-      //entities:[__dirname + '/**/*.entity{.ts,.js}']
-      synchronize:true
+      synchronize: true,
     }),
 
     UsersModule,

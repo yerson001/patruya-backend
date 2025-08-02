@@ -5,19 +5,22 @@ import { TimeAndDistanceService } from 'src/time_and_distance/time_and_distance.
 import { ClientRequests } from './cliente_requests.entity';
 import { Repository } from 'typeorm';
 import { CreateClientRequestDto } from './dto/create.client_requests.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ClientRequestsService {
-    private client: Client;
+  private client: Client;
+  private googleApiKey: string;
 
-    constructor(
-        @InjectRepository(ClientRequests) private clientRequestsRepository: Repository<ClientRequests>,
-
-        private timeAndDistanceService: TimeAndDistanceService
-    ) {
-        this.client = new Client({});
-
-    }
+  constructor(
+    @InjectRepository(ClientRequests)
+    private clientRequestsRepository: Repository<ClientRequests>,
+    private timeAndDistanceService: TimeAndDistanceService,
+    private readonly configService: ConfigService, // ✅ Inyectamos ConfigService
+  ) {
+    this.client = new Client({});
+    this.googleApiKey = this.configService.get<string>('GOOGLE_MAPS_API_KEY'); // ✅ Cargamos la API Key desde .env
+  }
     async create(clientRequest: CreateClientRequestDto) {
         try {
             await this.clientRequestsRepository.query(
@@ -98,7 +101,7 @@ export class ClientRequestsService {
         // Paso 2: llamar a la API Distance Matrix
         const googleResponse = await this.client.distancematrix({
             params: {
-                key: 'AIzaSyCz2_cuCf3LfiR-gjQBD-GXdIiCYOtpLMo',
+                key: this.googleApiKey,
                 mode: TravelMode.driving,
                 origins: [`${officer_lat},${officer_lng}`],
                 destinations: pickup_positions
@@ -137,7 +140,7 @@ export class ClientRequestsService {
 
             params: {
                 mode: TravelMode.driving,
-                key: 'AIzaSyCz2_cuCf3LfiR-gjQBD-GXdIiCYOtpLMo',
+                key: this.googleApiKey,
                 origins: [`${origin_lat},${origin_lng}`],
                 destinations: [`${destination_lat},${destination_lng}`],
             },
@@ -158,8 +161,6 @@ export class ClientRequestsService {
                 'text': response.data.rows[0].elements[0].duration.text,
                 'value': response.data.rows[0].elements[0].duration.value / 60,
             },
-
         };
-
     }
 }
