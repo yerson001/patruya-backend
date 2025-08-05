@@ -1,6 +1,7 @@
 import { hash } from "bcrypt";
 import { ClientRequests } from "src/client_requests/cliente_requests.entity";
 import { OfficerPosition } from "src/officer_position/officer_position.entity";
+import { OfficerTripResponse } from "src/officer_trip_response/officer_trip_response.entity";
 import { Rol } from "src/roles/rol.entity";
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { JoinAttribute } from "typeorm/query-builder/JoinAttribute";
@@ -57,6 +58,9 @@ export class User {
 
     @OneToMany(() => ClientRequests,ClientRequests=>ClientRequests.id_client)
     ClientRequests: ClientRequests;
+
+    @OneToMany(() => OfficerTripResponse,officerTripResponse=>officerTripResponse.id_officer)
+    OfficerTripResponse: OfficerTripResponse;
 
     @JoinTable({
         name: 'user_has_roles',

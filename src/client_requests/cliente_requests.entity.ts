@@ -1,4 +1,5 @@
 import { Point } from "geojson";
+import { OfficerTripResponse } from "src/officer_trip_response/officer_trip_response.entity";
 //import { DriverTripOffers } from "src/driver_trip_offers/driver_trip_offers.entity";
 import { User } from "src/users/user.entity";
 import { Column, CreateDateColumn, Entity, Geometry, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
@@ -30,35 +31,35 @@ export class ClientRequests {
 
     @Column()
     destination_description: string;
-/*
-    @Column({ nullable: true })
-    id_driver_assigned: number;
+    /*
+        @Column({ nullable: true })
+        id_driver_assigned: number;
+    
+        @Column({ nullable: true })
+        fare_assigned: number;
+    
+        @Column('decimal', { nullable: true, precision: 5, scale: 2 })
+        client_rating: number;
+    
+        @Column('decimal', { nullable: true, precision: 5, scale: 2 })
+        driver_rating: number;
+        */
 
-    @Column({ nullable: true })
-    fare_assigned: number;
+    @Column({
+        type: 'geometry',
+        spatialFeatureType: 'Point',
+        srid: 4326,
+        nullable: false
+    })
+    pickup_position: Geometry;
 
-    @Column('decimal', { nullable: true, precision: 5, scale: 2 })
-    client_rating: number;
-
-    @Column('decimal', { nullable: true, precision: 5, scale: 2 })
-    driver_rating: number;
-    */
-
-@Column({
-    type: 'geometry',
-    spatialFeatureType: 'Point',
-    srid: 4326,
-    nullable: false
-})
-pickup_position: Geometry;
-
-@Column({
-    type: 'geometry',
-    spatialFeatureType: 'Point',
-    srid: 4326,
-    nullable: false
-})
-destination_position: Geometry;
+    @Column({
+        type: 'geometry',
+        spatialFeatureType: 'Point',
+        srid: 4326,
+        nullable: false
+    })
+    destination_position: Geometry;
 
     @Column({
         type: 'enum',
@@ -73,18 +74,13 @@ destination_position: Geometry;
     @CreateDateColumn({ type: 'timestamp' })
     created_at: Date;
 
-    
+
     @ManyToOne(() => User, (user) => user.id)
     @JoinColumn({ name: 'id_client' })
     user: User;
-    /*
-        @ManyToOne(() => User, (user) => user.id)
-        @JoinColumn({ name: 'id_driver_assigned' })
-        driverAssigned: User;
-    
-        @OneToMany(() => DriverTripOffers, driverTripOffers => driverTripOffers.id_client_request, {
-            cascade: true
-        })
-        driverTripOffers: DriverTripOffers;
-    */
+
+    @OneToMany(() => OfficerTripResponse, officerTripResponse => officerTripResponse.id_client_request)
+    OfficerTripResponse: OfficerTripResponse;
+
+
 }

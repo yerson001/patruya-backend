@@ -64,7 +64,7 @@ export class OfficerPositionService {
             WHERE id_officer = $1
             LIMIT 1
             `,
-                    [id_officer]
+            [id_officer]
         );
 
         return result[0] || null;
@@ -74,22 +74,23 @@ export class OfficerPositionService {
 
     async getNearbyOfficers(citizen_lat: number, citizen_lng: number) {
         const officers = await this.officerPositionRepository.query(`
-        SELECT
-            id_officer,
-            json_build_object(
-                'x', ST_X(position::geometry),
-                'y', ST_Y(position::geometry)
-            ) AS position,
-            ST_Distance(position::geography, ST_MakePoint($2, $1)::geography) AS distance
-        FROM
-            officer_position
-        WHERE
-            ST_Distance(position::geography, ST_MakePoint($2, $1)::geography) <= 5000
-        ORDER BY distance ASC
-    `, [citizen_lat, citizen_lng]);
+            SELECT
+                id_officer,
+                json_build_object(
+                    'x', ST_X(position::geometry),
+                    'y', ST_Y(position::geometry)
+                ) AS position,
+                ST_Distance(position::geography, ST_MakePoint($2, $1)::geography) AS distance
+            FROM
+                officer_position
+            WHERE
+                ST_Distance(position::geography, ST_MakePoint($2, $1)::geography) <= 5000
+            ORDER BY distance ASC
+        `, [citizen_lat, citizen_lng]);
 
-        return officers;
+        return officers || []; // ✅ devuelve siempre array
     }
+
 
     delete(id_driver: number) {
         return this.officerPositionRepository.delete(id_driver);

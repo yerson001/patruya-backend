@@ -32,20 +32,22 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.emit('new_driver_position', { id_socket: client.id, id: data.id, lat: data.lat, lng: data.lng });
     }
 
+    // ************ INFORMACION DEL CONDUCTOR *********
     @SubscribeMessage('new_client_request')
     handleNewClientRequest(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-        this.server.emit('created_client_request', { id_socket: client.id, id_client_request: data.id_client_request });
+        console.log('ID CLIENT REQUEST: ', data.id_citizen_request);
+        this.server.emit('created_citizen_request', { id_socket: client.id, id_citizen_request: data.id_citizen_request });
     }
 
     @SubscribeMessage('new_driver_offer')
     handleNewDriverOffer(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-        console.log('ID CLIENT REQUEST DRIVER OFFER:', data.id_client_request);
-        this.server.emit(`created_driver_offer/${data.id_client_request}`, { id_socket: client.id });
+        console.log('ID CLIENT REQUEST DRIVER OFFER:', data.id_citizen_request);
+        this.server.emit(`created_driver_offer/${data.id_citizen_request}`, { id_socket: client.id });
     }
-
+//
     @SubscribeMessage('new_driver_assigned')
     handleNewDriverAssigned(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-        this.server.emit(`driver_assigned/${data.id_driver}`, { id_socket: client.id, id_client_request: data.id_client_request });
+        this.server.emit(`driver_assigned/${data.id_driver}`, { id_socket: client.id, id_citizen_request: data.id_citizen_request });
     }
 
     @SubscribeMessage('trip_change_driver_position')
@@ -55,6 +57,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('update_status_trip')
     handleUpdateStatusTrip(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-        this.server.emit(`new_status_trip/${data.id_client_request}`, { id_socket: client.id, status: data.status, id_client_request: data.id_client_request });
+        this.server.emit(`new_status_trip/${data.id_citizen_request}`, { id_socket: client.id, status: data.status, id_citizen_request: data.id_citizen_request });
     }
 }   

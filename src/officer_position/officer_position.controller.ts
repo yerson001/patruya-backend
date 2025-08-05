@@ -20,6 +20,7 @@ export class OfficerPositionController {
         return this.officerPositionService.getNearbyOfficers(citizen_lat, citizen_lng);
     }
 
+
     @Delete(':id_officer')
     delete(@Param('id_officer', ParseIntPipe) id_officer: number) {
         return this.officerPositionService.delete(id_officer);

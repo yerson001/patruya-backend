@@ -47,7 +47,12 @@ export class ClientRequestsService {
                     clientRequest.destination_lat   // LATITUD destino
                 ]
             );
-            return true;
+            const data = await this.clientRequestsRepository.query(`SELECT MAX(id) AS id FROM client_requests`);
+            console.log("ID CLIENT REQUEST: ", data[0].id);
+            
+
+
+            return Number(data[0].id);
         } catch (e) {
             console.log("Error creando la solicitud del cliente", e);
             return false;
