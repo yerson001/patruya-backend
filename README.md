@@ -121,7 +121,7 @@ pm2 logs patruya-backend
 
 ```
 
-
+```sql
 CREATE TABLE cities (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100),
@@ -188,9 +188,18 @@ WHERE
   AND ST_Distance(c1.position::geography, c2.position::geography) <= 700
 ORDER BY 
   distance_meters;
+```
 
 
+```sql
+SET time_and_distence
+1 2 1.5
 
+```
+
+```
+
+```
 
 
 

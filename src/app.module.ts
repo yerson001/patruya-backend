@@ -16,8 +16,8 @@ import { OfficerTripResponseModule } from './officer_trip_response/officer_trip_
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Hace que ConfigModule esté disponible en todos los módulos
-      envFilePath: '.env', // Carga las variables desde el archivo .env
+      isGlobal: true, 
+      envFilePath: '.env',
     }),
 
     TypeOrmModule.forRoot({
